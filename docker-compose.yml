@@ -1,0 +1,56 @@
+version: "3.9"
+###############################################
+volumes:
+  postgres-data: 
+    external: true
+  cassandra-data: 
+    external: true
+###############################################
+networks:
+  backend:
+###############################################
+services:
+###############################################
+   cassandra:
+    hostname: tms-cassandra
+    image: 192.168.50.50:4000/cassandra:2.2
+    ports:
+    - "9042:9042"
+    environment:
+      - CASSANDRA_START_RPC=true
+      - CASSANDRA_SEEDS=tms-cassandra
+      - CASSANDRA_LISTEN_ADDRESS=cassandra
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+    volumes:
+       - ./data/cassandra:/root/source
+       - cassandra-data:/var/lib/cassandra
+    networks:
+      - backend
+###############################################
+   cassandra-2:
+    hostname: tms-cassandra-2
+    image: 192.168.50.50:4000/cassandra:2.2
+    ports:
+    - "9043:9042"
+    environment:
+      - CASSANDRA_START_RPC=true
+      - CASSANDRA_SEEDS=cassandra
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+    networks:
+      - backend
+###############################################
+   cassandra-3:
+    hostname: tms-cassandra-3
+    image: 192.168.50.50:4000/cassandra:2.2
+    ports:
+    - "9044:9042"
+    environment:
+      - CASSANDRA_START_RPC=true
+      - CASSANDRA_SEEDS=cassandra
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+    networks:
+      - backend
+###############################################
